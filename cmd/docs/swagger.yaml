@@ -1,0 +1,26 @@
+definitions:
+  responses.HealthResponse:
+    properties:
+      success:
+        type: boolean
+      time:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: This service manages Identity and Access Management
+  title: Athena API
+  version: "1.0"
+paths:
+  /athena/health:
+    get:
+      description: Check if component is up and running
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.HealthResponse'
+      summary: Component Health Check
+      tags:
+      - Health
+swagger: "2.0"

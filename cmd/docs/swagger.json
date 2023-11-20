@@ -1,0 +1,41 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This service manages Identity and Access Management",
+        "title": "Athena API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "paths": {
+        "/athena/health": {
+            "get": {
+                "description": "Check if component is up and running",
+                "tags": [
+                    "Health"
+                ],
+                "summary": "Component Health Check",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.HealthResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "responses.HealthResponse": {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "boolean"
+                },
+                "time": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
