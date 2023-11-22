@@ -31,6 +31,24 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/athena/v1/policies/{id}": {
+            "get": {
+                "tags": [
+                    "Policies"
+                ],
+                "summary": "Get Policy by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID of Policy",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
         }
     },
     "definitions": {

@@ -23,4 +23,16 @@ paths:
       summary: Component Health Check
       tags:
       - Health
+  /athena/v1/policies/{id}:
+    get:
+      parameters:
+      - description: ID of Policy
+        in: path
+        name: id
+        required: true
+        type: string
+      responses: {}
+      summary: Get Policy by ID
+      tags:
+      - Policies
 swagger: "2.0"

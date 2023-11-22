@@ -4,6 +4,9 @@ import (
 	_ "Olympus-Athena/cmd/docs"
 	"Olympus-Athena/pkg/database"
 	"Olympus-Athena/pkg/handlers"
+	"Olympus-Athena/pkg/repositories"
+	"Olympus-Athena/pkg/routes"
+	"Olympus-Athena/pkg/services"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -21,7 +24,6 @@ type AthenaAppConfig struct {
 
 type AthenaApp struct {
 	appConfig AthenaAppConfig
-	fiberApp  *fiber.App
 	db        database.AthenaDb
 }
 
@@ -36,31 +38,6 @@ func (a *AthenaApp) RegisterDb() {
 func NewAthenaApp(appConfig AthenaAppConfig) *AthenaApp {
 	return &AthenaApp{
 		appConfig: appConfig,
-	}
-}
-
-func (a *AthenaApp) RegisterFiber() {
-	a.fiberApp = fiber.New(fiber.Config{
-		AppName: "Athena API",
-	})
-
-	a.fiberApp.Use(recover.New())
-	a.fiberApp.Use(cors.New())
-	a.fiberApp.Use(redirect.New(redirect.Config{
-		Rules: map[string]string{
-			"/athena/docs": "/athena/docs/index.html",
-			"/athena":      "/athena/docs/index.html",
-		},
-	}))
-	a.fiberApp.Use(logger.New(logger.Config{
-		Format: "[${ip}]:${port} ${status} - ${method} ${path}\n",
-	}))
-
-	a.fiberApp.Get("/athena/docs/*", swagger.FiberWrapHandler())
-
-	athena := a.fiberApp.Group("/athena")
-	{
-		athena.Get("/health", handlers.HealthHandler)
 	}
 }
 
@@ -79,9 +56,45 @@ func main() {
 		DbConnectionString: dbConnString,
 	})
 
-	app.RegisterFiber()
+	// Dependencies
 	app.RegisterDb()
 	defer app.db.Disconnect()
 
-	slog.Error("Critical Error launching API", "Error", app.fiberApp.Listen(":4200"))
+	// repos
+	policyRepo := repositories.NewPolicyMySqlRepository(&app.db)
+
+	// services
+	policyService := services.NewPolicyMySqlService(policyRepo)
+
+	// Fiber
+	fiberApp := fiber.New(fiber.Config{
+		AppName: "Athena API",
+	})
+
+	fiberApp.Use(recover.New())
+	fiberApp.Use(cors.New())
+	fiberApp.Use(redirect.New(redirect.Config{
+		Rules: map[string]string{
+			"/athena/docs": "/athena/docs/index.html",
+			"/athena":      "/athena/docs/index.html",
+		},
+	}))
+	fiberApp.Use(logger.New(logger.Config{
+		Format: "[${ip}]:${port} ${status} - ${method} ${path}\n",
+	}))
+
+	fiberApp.Get("/athena/docs/*", swagger.FiberWrapHandler())
+
+	athena := fiberApp.Group("/athena")
+	{
+		athena.Get("/health", handlers.HealthHandler)
+
+		v1 := athena.Group("/v1")
+		{
+			routes.SetupPolicyRoutes(v1, handlers.NewPolicyHandler(policyService))
+		}
+
+	}
+
+	slog.Error("Critical Error launching API", "Error", fiberApp.Listen(":4200"))
 }
