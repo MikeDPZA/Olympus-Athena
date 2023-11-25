@@ -1,6 +1,7 @@
 package database
 
 import (
+	"Olympus-Athena/pkg/models"
 	"gorm.io/driver/mysql"
 	_ "gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -36,6 +37,28 @@ func (a *AthenaMySqlDb) Connect() {
 	}
 
 	a.Db = db
+
+	a.migrate()
+
+}
+
+func (a *AthenaMySqlDb) migrate() {
+	err := a.Db.AutoMigrate(
+		&models.Policy{},
+		&models.User{},
+		&models.Feature{},
+		&models.Action{},
+		&models.PolicyAction{},
+		&models.Container{},
+		&models.ContainerPolicy{},
+		&models.UserContainer{},
+		&models.UserPolicy{},
+	)
+
+	if err != nil {
+		slog.Error("Couldn't migrate DB", "error", err)
+		panic("Couldn't Migrate")
+	}
 }
 
 func (a *AthenaMySqlDb) Disconnect() {

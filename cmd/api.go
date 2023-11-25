@@ -2,8 +2,8 @@ package main
 
 import (
 	_ "Olympus-Athena/cmd/docs"
+	"Olympus-Athena/pkg/controllers"
 	"Olympus-Athena/pkg/database"
-	"Olympus-Athena/pkg/handlers"
 	"Olympus-Athena/pkg/repositories"
 	"Olympus-Athena/pkg/routes"
 	"Olympus-Athena/pkg/services"
@@ -87,11 +87,11 @@ func main() {
 
 	athena := fiberApp.Group("/athena")
 	{
-		athena.Get("/health", handlers.HealthHandler)
+		athena.Get("/health", controllers.HealthHandler)
 
 		v1 := athena.Group("/v1")
 		{
-			routes.SetupPolicyRoutes(v1, handlers.NewPolicyHandler(policyService))
+			routes.SetupPolicyRoutes(v1, controllers.NewPolicyController(policyService))
 		}
 
 	}

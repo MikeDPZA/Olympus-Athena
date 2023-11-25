@@ -1,13 +1,13 @@
 package routes
 
 import (
-	"Olympus-Athena/pkg/handlers"
+	"Olympus-Athena/pkg/controllers"
 	"github.com/gofiber/fiber/v2"
 )
 
-func SetupPolicyRoutes(athenaGroup fiber.Router, policyHandler *handlers.PolicyHandler) {
+func SetupPolicyRoutes(athenaGroup fiber.Router, policyHandler *controllers.PolicyController) {
 	policy := athenaGroup.Group("/policies")
 	{
-		policy.Get("/:id", policyHandler.HandleGetPolicyById)
+		policy.Get("/:id", policyHandler.GetPolicyById)
 	}
 }

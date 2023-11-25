@@ -1,4 +1,4 @@
-package handlers
+package controllers
 
 import (
 	"Olympus-Athena/pkg/responses"
@@ -7,22 +7,22 @@ import (
 	"github.com/google/uuid"
 )
 
-type PolicyHandler struct {
+type PolicyController struct {
 	policyService services.PolicyService
 }
 
-func NewPolicyHandler(ps services.PolicyService) *PolicyHandler {
-	return &PolicyHandler{
+func NewPolicyController(ps services.PolicyService) *PolicyController {
+	return &PolicyController{
 		policyService: ps,
 	}
 }
 
-// HandleGetPolicyById godoc
+// GetPolicyById godoc
 // @Summary Get Policy by ID
 // @Tags Policies
 // @Param id path string true "ID of Policy"
 // @Router /athena/v1/policies/{id} [get]
-func (ph *PolicyHandler) HandleGetPolicyById(ctx *fiber.Ctx) error {
+func (ph *PolicyController) GetPolicyById(ctx *fiber.Ctx) error {
 	idString := ctx.Params("id")
 
 	id := uuid.MustParse(idString)

@@ -1,8 +1,9 @@
 package models
 
-import "gorm.io/gorm"
-
 type Policy struct {
-	gorm.Model
-	Name string
+	Base
+	Name              string            `gorm:"size:32"`
+	PolicyActions     []PolicyAction    `gorm:"foreignKey:PolicyId"`
+	ContainerPolicies []ContainerPolicy `gorm:"foreignKey:PolicyId"`
+	UserPolicies      []UserPolicy      `gorm:"foreignKey:PolicyId"`
 }
