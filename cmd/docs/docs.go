@@ -5,6 +5,12 @@ import "github.com/swaggo/swag"
 
 const docTemplate = `{
     "schemes": {{ marshal .Schemes }},
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
     "swagger": "2.0",
     "info": {
         "description": "{{escape .Description}}",
@@ -32,6 +38,26 @@ const docTemplate = `{
                 }
             }
         },
+        "/athena/v1/oauth/clients": {
+            "post": {
+                "tags": [
+                    "OAuth Client"
+                ],
+                "summary": "Create an OAuth Client",
+                "parameters": [
+                    {
+                        "description": "Body to create a client",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/oauth.ClientRegistrationRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/athena/v1/policies/{id}": {
             "get": {
                 "tags": [
@@ -52,6 +78,71 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "oauth.ClientRegistrationRequest": {
+            "type": "object",
+            "properties": {
+                "client_name": {
+                    "type": "string"
+                },
+                "client_uri": {
+                    "type": "string"
+                },
+                "contacts": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "grant_types": {
+                    "description": "authorization_code (default), implicit, password, client_credentials, refresh_token",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "jwks": {
+                    "type": "string"
+                },
+                "jwks_uri": {
+                    "type": "string"
+                },
+                "logo_uri": {
+                    "type": "string"
+                },
+                "policy_uri": {
+                    "type": "string"
+                },
+                "redirect_uris": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "response_types": {
+                    "description": "code (default), token",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "scope": {
+                    "type": "string"
+                },
+                "software_id": {
+                    "type": "string"
+                },
+                "software_version": {
+                    "type": "string"
+                },
+                "token_endpoint_auth_method": {
+                    "description": "Values\nnone - public client aka no secret\nclient_secret_post - uses http post params\nclient_secret_basic - uses http basic",
+                    "type": "string"
+                },
+                "tos_uri": {
+                    "type": "string"
+                }
+            }
+        },
         "responses.HealthResponse": {
             "type": "object",
             "properties": {

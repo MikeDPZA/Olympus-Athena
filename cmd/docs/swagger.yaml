@@ -1,4 +1,55 @@
+consumes:
+- application/json
 definitions:
+  oauth.ClientRegistrationRequest:
+    properties:
+      client_name:
+        type: string
+      client_uri:
+        type: string
+      contacts:
+        items:
+          type: string
+        type: array
+      grant_types:
+        description: authorization_code (default), implicit, password, client_credentials,
+          refresh_token
+        items:
+          type: string
+        type: array
+      jwks:
+        type: string
+      jwks_uri:
+        type: string
+      logo_uri:
+        type: string
+      policy_uri:
+        type: string
+      redirect_uris:
+        items:
+          type: string
+        type: array
+      response_types:
+        description: code (default), token
+        items:
+          type: string
+        type: array
+      scope:
+        type: string
+      software_id:
+        type: string
+      software_version:
+        type: string
+      token_endpoint_auth_method:
+        description: |-
+          Values
+          none - public client aka no secret
+          client_secret_post - uses http post params
+          client_secret_basic - uses http basic
+        type: string
+      tos_uri:
+        type: string
+    type: object
   responses.HealthResponse:
     properties:
       success:
@@ -23,6 +74,19 @@ paths:
       summary: Component Health Check
       tags:
       - Health
+  /athena/v1/oauth/clients:
+    post:
+      parameters:
+      - description: Body to create a client
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/oauth.ClientRegistrationRequest'
+      responses: {}
+      summary: Create an OAuth Client
+      tags:
+      - OAuth Client
   /athena/v1/policies/{id}:
     get:
       parameters:
@@ -35,4 +99,6 @@ paths:
       summary: Get Policy by ID
       tags:
       - Policies
+produces:
+- application/json
 swagger: "2.0"

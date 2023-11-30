@@ -44,6 +44,8 @@ func NewAthenaApp(appConfig AthenaAppConfig) *AthenaApp {
 // @title Athena API
 // @version 1.0
 // @description This service manages Identity and Access Management
+// @Produce json
+// @Accept json
 func main() {
 	err := godotenv.Load()
 	if err != nil {
@@ -92,6 +94,7 @@ func main() {
 		v1 := athena.Group("/v1")
 		{
 			routes.SetupPolicyRoutes(v1, controllers.NewPolicyController(policyService))
+			routes.SetupOAuthRoutes(v1, controllers.NewOAuthClientController())
 		}
 
 	}
