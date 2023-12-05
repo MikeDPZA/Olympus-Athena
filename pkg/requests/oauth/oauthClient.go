@@ -8,6 +8,17 @@ const (
 	RefreshTokenGrantType      = "refresh_token"
 )
 
+const (
+	CodeResponseType  = "code"
+	TokenResponseType = "token"
+)
+
+const (
+	NoneTokenEndpointAuthMethod              = "none"
+	ClientSecretPostTokenEndpointAuthMethod  = "client_secret_post"
+	ClientSecretBasicTokenEndpointAuthMethod = "client_secret_basic"
+)
+
 type ClientRegistrationRequest struct {
 	ClientName string   `json:"client_name"`
 	ClientUri  string   `json:"client_uri"`
@@ -23,13 +34,13 @@ type ClientRegistrationRequest struct {
 	PolicyUri string `json:"policy_uri"`
 
 	// code (default), token
-	ResponseTypes []string `json:"response_types"`
+	ResponseType string `json:"response_type"`
 
 	Scope           string `json:"scope"`
 	SoftwareId      string `json:"software_id"`
 	SoftwareVersion string `json:"software_version"`
-	//Values
-	// none - public client aka no secret
+
+	// none - public client
 	// client_secret_post - uses http post params
 	// client_secret_basic - uses http basic
 	TokenEndpointAuthMethod string `json:"token_endpoint_auth_method"`

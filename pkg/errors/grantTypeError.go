@@ -5,5 +5,5 @@ type GrantTypeError struct {
 }
 
 func (g GrantTypeError) Error() string {
-	return "Invalid grant type given: " + g.GrantType
+	return grantTypeErrorCode + " - Invalid grant type given: " + g.GrantType
 }

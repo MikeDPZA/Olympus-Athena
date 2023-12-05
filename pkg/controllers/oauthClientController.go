@@ -33,9 +33,8 @@ func (o OAuthClientController) RegisterClient(ctx *fiber.Ctx) error {
 		})
 	}
 
-	err = validators.ValidateGrantTypes(request.GrantTypes)
+	err = validators.ValidateClientRegistrationRequest(&request)
 	if err != nil {
-		slog.Error("Couldn't validate grant_type", "error", err)
 		return ctx.Status(fiber.StatusBadRequest).JSON(&responses.ApiError{
 			Error: err.Error(),
 		})
