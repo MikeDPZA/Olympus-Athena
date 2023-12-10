@@ -53,6 +53,7 @@ func (a *AthenaMySqlDb) migrate() {
 		&models.ContainerPolicy{},
 		&models.UserContainer{},
 		&models.UserPolicy{},
+		&models.OAuthClient{},
 	)
 
 	if err != nil {

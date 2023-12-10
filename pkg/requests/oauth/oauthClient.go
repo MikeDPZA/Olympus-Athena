@@ -19,15 +19,16 @@ const (
 	ClientSecretBasicTokenEndpointAuthMethod = "client_secret_basic"
 )
 
-type ClientRegistrationRequest struct {
-	ClientName string   `json:"client_name"`
+// PutOAuthClientRequest https://www.rfc-editor.org/rfc/rfc7591.html
+type PutOAuthClientRequest struct {
+	ClientName string   `json:"client_name" validate:"required"`
 	ClientUri  string   `json:"client_uri"`
 	Contacts   []string `json:"contacts"`
 
 	// authorization_code (default), implicit, password, client_credentials, refresh_token
-	GrantTypes   []string `json:"grant_types"`
+	GrantTypes   []string `json:"grant_types" validate:"required"`
 	LogoUri      string   `json:"logo_uri"`
-	Jwks         string   `json:"jwks"`
+	Jwks         *Jwks    `json:"jwks"`
 	JwksUri      string   `json:"jwks_uri"`
 	RedirectUris []string `json:"redirect_uris"`
 

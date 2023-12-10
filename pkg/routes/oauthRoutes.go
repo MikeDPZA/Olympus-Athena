@@ -10,7 +10,7 @@ func SetupOAuthRoutes(athena fiber.Router, clientController *controllers.OAuthCl
 	{
 		client := oauth.Group("/clients")
 		{
-			client.Post("/", clientController.RegisterClient)
+			client.Put("/", clientController.PutClient)
 		}
 	}
 }

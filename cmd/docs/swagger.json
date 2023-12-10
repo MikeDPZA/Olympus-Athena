@@ -31,7 +31,7 @@
             }
         },
         "/athena/v1/oauth/clients": {
-            "post": {
+            "put": {
                 "tags": [
                     "OAuth Client"
                 ],
@@ -43,11 +43,24 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/oauth.ClientRegistrationRequest"
+                            "$ref": "#/definitions/oauth.PutOAuthClientRequest"
                         }
                     }
                 ],
-                "responses": {}
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.PutOAuthClientResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ApiError"
+                        }
+                    }
+                }
             }
         },
         "/athena/v1/policies/{id}": {
@@ -70,8 +83,56 @@
         }
     },
     "definitions": {
-        "oauth.ClientRegistrationRequest": {
+        "oauth.Jwks": {
             "type": "object",
+            "properties": {
+                "alg": {
+                    "description": "Algorithm to be used with the key",
+                    "type": "string"
+                },
+                "key_ops": {
+                    "description": "Identifies operation(s) for which the key is intended to be used and should NOT be used with the \"use\" field\n\to  \"sign\" (compute digital signature or MAC)\n\to  \"verify\" (verify digital signature or MAC)\n\to  \"encrypt\" (encrypt content)\n\to  \"decrypt\" (decrypt content and validate decryption, if applicable)\n\to  \"wrapKey\" (encrypt key)\n\to  \"unwrapKey\" (decrypt key and validate decryption, if applicable)\n\to  \"deriveKey\" (derive key)\n\to  \"deriveBits\" (derive bits not to be used as a key)",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "kid": {
+                    "description": "Used to match a specific key",
+                    "type": "string"
+                },
+                "kty": {
+                    "description": "Cryptographic Algorithm\ne.g. \"RSA\" or \"EC\"",
+                    "type": "string"
+                },
+                "use": {
+                    "description": "Intended use of public key (encrypting or verifying signature) and should NOT be used with the \"key_ops\" field\ne.g. \"sig\" or \"enc\"",
+                    "type": "string"
+                },
+                "x5c": {
+                    "description": "Contains chain of 1+ PKIX certificates represented as JSON array of certificate value strings",
+                    "type": "string"
+                },
+                "x5t": {
+                    "description": "Base64 Url encoded SHA-1 thumbprint (digest) of the DER encoding of X509 Certificate",
+                    "type": "string"
+                },
+                "x5t#S256": {
+                    "description": "Base64 Url encoded SHA-256 thumbprint (digest) of the DER encoding of X509 Certificate",
+                    "type": "string"
+                },
+                "x5u": {
+                    "description": "Refers to a resource for an X509 public key certificate or certificate chain",
+                    "type": "string"
+                }
+            }
+        },
+        "oauth.PutOAuthClientRequest": {
+            "type": "object",
+            "required": [
+                "client_name",
+                "grant_types"
+            ],
             "properties": {
                 "client_name": {
                     "type": "string"
@@ -93,7 +154,7 @@
                     }
                 },
                 "jwks": {
-                    "type": "string"
+                    "$ref": "#/definitions/oauth.Jwks"
                 },
                 "jwks_uri": {
                     "type": "string"
@@ -110,12 +171,9 @@
                         "type": "string"
                     }
                 },
-                "response_types": {
+                "response_type": {
                     "description": "code (default), token",
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                    "type": "string"
                 },
                 "scope": {
                     "type": "string"
@@ -127,10 +185,21 @@
                     "type": "string"
                 },
                 "token_endpoint_auth_method": {
-                    "description": "Values\nnone - public client aka no secret\nclient_secret_post - uses http post params\nclient_secret_basic - uses http basic",
+                    "description": "none - public client\nclient_secret_post - uses http post params\nclient_secret_basic - uses http basic",
                     "type": "string"
                 },
                 "tos_uri": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.ApiError": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "error_code": {
                     "type": "string"
                 }
             }
@@ -142,6 +211,17 @@
                     "type": "boolean"
                 },
                 "time": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.PutOAuthClientResponse": {
+            "type": "object",
+            "properties": {
+                "client_id": {
+                    "type": "string"
+                },
+                "client_secret": {
                     "type": "string"
                 }
             }
